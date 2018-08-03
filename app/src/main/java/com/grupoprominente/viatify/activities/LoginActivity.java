@@ -309,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         startActivity(intent);
         finish();
     }
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, LoginResponse> {
 
         User user = new User();
 
@@ -320,7 +320,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected LoginResponse doInBackground(Void... voids) {
             // TODO: attempt authentication against a network service.
             LoginResponse loginResponse = RestApi.getInstance().login(user);
 
@@ -330,15 +330,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
-            return true;
+            return loginResponse;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final LoginResponse loginResponse) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (loginResponse != null) {
                 startMainActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
