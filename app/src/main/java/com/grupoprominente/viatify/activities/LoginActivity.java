@@ -1,6 +1,7 @@
 package com.grupoprominente.viatify.activities;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -302,6 +303,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    private void startMainActivity()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         User user = new User();
@@ -332,7 +339,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                startMainActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
