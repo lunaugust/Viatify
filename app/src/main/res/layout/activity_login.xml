@@ -34,63 +34,61 @@
 
         <RelativeLayout
             android:id="@+id/email_login_form"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgLogo"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/image_size"
-                app:srcCompat="@drawable/logo"
-                android:contentDescription="logo"/>
+                android:layout_height="wrap_content"
+                android:contentDescription="logo"
+                app:srcCompat="@drawable/logo" />
 
 
-
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    style="@style/editStyle"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_below="@id/imgLogo"/>
-
+            <AutoCompleteTextView
+                android:id="@+id/email"
+                style="@style/editStyle"
+                android:layout_below="@id/imgLogo"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true" />
 
 
-
-
-                <EditText
-                    android:id="@+id/password"
-                    style="@style/editStyle"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_below="@id/email"/>
-
+            <EditText
+                android:id="@+id/password"
+                style="@style/editStyle"
+                android:layout_below="@id/email"
+                android:hint="@string/prompt_password"
+                android:imeActionId="6"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true" />
 
 
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="@style/buttonStyle"
-                android:text="@string/action_sign_in"
                 android:layout_below="@id/password"
-                />
+                android:text="@string/action_sign_in" />
 
             <ImageView
                 android:id="@+id/imgPromi"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/image_size_min"
-                android:layout_below="@id/email_sign_in_button"
+                android:layout_alignBottom="@id/imgPromi"
+                android:layout_below="@+id/email_sign_in_button"
+                android:layout_gravity="bottom|center"
                 android:contentDescription="logoPromi"
                 app:srcCompat="@drawable/ic_logo_blanco"
-                tools:ignore="VectorDrawableCompat"
-                android:layout_alignBottom="@id/imgPromi"/>
+                tools:ignore="VectorDrawableCompat" />
 
         </RelativeLayout>
+
+
     </ScrollView>
+
 </LinearLayout>
