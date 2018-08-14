@@ -3,13 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.grupoprominente.viatify.activities.ViaticActivity">
     <item
-    android:id="@+id/btnAttach"
-    android:icon="@mipmap/ic_attachment"
-    android:title="Adjunto"
-    app:showAsAction="always"></item>
-    <item
         android:id="@+id/btnDone"
-        android:icon="@mipmap/ic_done"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_done_white_24dp"
         android:title="Listo"
         app:showAsAction="always"></item>
 </menu>

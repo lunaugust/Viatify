@@ -19,19 +19,24 @@
             android:label="Viatify"
             android:noHistory="true"
             android:theme="@style/Splashscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".activities.MainActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:label="Viáticos">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".activities.ViaticActivity">
+        <activity
+            android:name=".activities.ViaticActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
     </application>
 

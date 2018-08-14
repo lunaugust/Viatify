@@ -3,6 +3,7 @@ package com.grupoprominente.viatify.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import android.support.v7.widget.Toolbar;
 import com.grupoprominente.viatify.R;
 
 public class ViaticActivity extends AppCompatActivity {
@@ -20,7 +22,19 @@ public class ViaticActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viatic);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         imgView = (ImageView)findViewById(R.id.imgView);
+        FloatingActionButton fabtnAdd = (FloatingActionButton) findViewById(R.id.fabtnAdd);
+        fabtnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 1);
+            }
+        });
     }
 
     @Override
@@ -51,10 +65,10 @@ public class ViaticActivity extends AppCompatActivity {
             /*case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;*/
-            case R.id.btnAttach:
+            /*case R.id.btnAttach:
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 1);
-                return true;
+                return true;*/
             case R.id.btnDone:
                 return true;
         }

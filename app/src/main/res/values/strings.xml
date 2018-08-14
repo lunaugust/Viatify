@@ -15,4 +15,9 @@
         completions."
     </string>
     <string name="action_settings">Ajustes</string>
+    <string name="title_activity_viatic">Viático</string>
+    <string name="prompt_title">Título</string>
+    <string name="prompt_description">Descripción</string>
+    <string name="prompt_date">mm/dd/aaaa</string>
+
 </resources>
