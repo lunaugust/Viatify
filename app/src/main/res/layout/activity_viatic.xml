@@ -65,9 +65,6 @@
 
 
             <include layout="@layout/content_viatic"/>
-            <include layout="@layout/content_viatic"/>
-            <include layout="@layout/content_viatic"/>
-            <include layout="@layout/content_viatic"/>
 
         </LinearLayout>
 
