@@ -39,7 +39,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // Create tables again
         onCreate(db);
     }
-    public long insertViatic(String title, String description, String path) {
+    public long insertViatic(String title, String description, Double amount, String path) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -48,6 +48,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // no need to add them
         values.put(Viatic.COLUMN_TITLE, title);
         values.put(Viatic.COLUMN_DESCRIPTION, description);
+        values.put(Viatic.COLUMN_AMOUNT, amount);
         values.put(Viatic.COLUMN_IMGPATH, path);
 
         // insert row
@@ -64,7 +65,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Viatic.TABLE_NAME,
-                new String[]{Viatic.COLUMN_ID, Viatic.COLUMN_TITLE, Viatic.COLUMN_DESCRIPTION,Viatic.COLUMN_TIMESTAMP, Viatic.COLUMN_IMGPATH},
+                new String[]{Viatic.COLUMN_ID, Viatic.COLUMN_TITLE, Viatic.COLUMN_DESCRIPTION, Viatic.COLUMN_AMOUNT, Viatic.COLUMN_TIMESTAMP, Viatic.COLUMN_IMGPATH},
                 Viatic.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -76,6 +77,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
                 cursor.getInt(cursor.getColumnIndex(Viatic.COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_TITLE)),
                 cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_DESCRIPTION)),
+                cursor.getDouble(cursor.getColumnIndex(Viatic.COLUMN_AMOUNT)),
                 cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_TIMESTAMP)),
                 cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_IMGPATH)));
 
@@ -102,6 +104,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
                 viatic.setId(cursor.getInt(cursor.getColumnIndex(viatic.COLUMN_ID)));
                 viatic.setTitle(cursor.getString(cursor.getColumnIndex(viatic.getTitle())));
                 viatic.setDescription(cursor.getString(cursor.getColumnIndex(viatic.getDescription())));
+                viatic.setAmount(cursor.getDouble(cursor.getColumnIndex(viatic.COLUMN_AMOUNT)));
                 viatic.setTimestamp(cursor.getString(cursor.getColumnIndex(viatic.COLUMN_TIMESTAMP)));
                 viatic.setImgpath(cursor.getString(cursor.getColumnIndex(viatic.getImgpath())));
 
@@ -134,6 +137,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(viatic.COLUMN_TITLE, viatic.getTitle());
         values.put(viatic.COLUMN_DESCRIPTION, viatic.getDescription());
+        values.put(viatic.COLUMN_AMOUNT, viatic.getAmount());
         values.put(viatic.COLUMN_IMGPATH, viatic.getImgpath());
 
         // updating row

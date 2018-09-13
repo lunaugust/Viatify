@@ -6,20 +6,25 @@ public class Viatic {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_DESCRIPTION = "description";
+    public static final String COLUMN_AMOUNT = "amount";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_IMGPATH = "imgpath";
 
     private int id;
     private String title;
     private String description;
+    private Double amount;
     private String timestamp;
     private String imgpath;
+
+
 
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_TITLE + " TEXT, "
                     + COLUMN_DESCRIPTION + " TEXT, "
+                    + COLUMN_AMOUNT + " REAL, "
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
                     + COLUMN_IMGPATH + " TEXT"
                     + ")";
@@ -27,10 +32,11 @@ public class Viatic {
     public Viatic() {
     }
 
-    public Viatic(int id, String title, String description, String timestamp, String imgpath){
+    public Viatic(int id, String title, String description, Double amount, String timestamp, String imgpath){
         this.id = id;
         this.title  = title;
         this.description = description;
+        this.amount = amount;
         this.timestamp = timestamp;
         this.imgpath = imgpath;
     }
@@ -46,6 +52,8 @@ public class Viatic {
     public String getDescription() {
         return description;
     }
+
+    public Double getAmount() { return amount; }
 
     public String getTimestamp() {
         return timestamp;
@@ -67,6 +75,8 @@ public class Viatic {
         this.description = description;
     }
 
+    public void setAmount(Double amount) { this.amount = amount; }
+
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
@@ -74,4 +84,7 @@ public class Viatic {
     public void setImgpath(String imgpath) {
         this.imgpath = imgpath;
     }
+
+
+
 }
