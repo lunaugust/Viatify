@@ -21,12 +21,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.text.TextUtils;
 
 import android.support.v7.widget.Toolbar;
 import com.grupoprominente.viatify.R;
 import com.grupoprominente.viatify.adapters.ArrayRvAdapter;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
+import com.grupoprominente.viatify.helpers.MoneyTextWatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +44,7 @@ public class ViaticActivity extends AppCompatActivity {
     private ImageView imgView;
     private EditText txtTitle;
     private EditText txtDescription;
+    private EditText txtAmount;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
 
@@ -59,18 +62,39 @@ public class ViaticActivity extends AppCompatActivity {
         db = new DatabaseHelper(this);
 
         imgView = (ImageView)findViewById(R.id.imgView);
-        FloatingActionButton fabtnAdd = (FloatingActionButton) findViewById(R.id.fabtnAdd);
-        fabtnAdd.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabtnDone = (FloatingActionButton) findViewById(R.id.fabtnDone);
+        fabtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }*/
-                dispatchTakePictureIntent();
+                boolean cancel = false;
+                View focusView = null;
+                txtTitle = (EditText) findViewById(R.id.input_title);
+                txtDescription = (EditText) findViewById(R.id.input_desc);
+                txtAmount = (EditText) findViewById(R.id.input_amount);
+                if (TextUtils.isEmpty(txtAmount.getText().toString()) ) {
+                    txtAmount.setError(getString(R.string.error_field_required));
+                    focusView = txtAmount;
+                    cancel = true;
+                }
+                if (TextUtils.isEmpty(txtTitle.getText().toString()) ) {
+                    txtTitle.setError(getString(R.string.error_field_required));
+                    focusView = txtTitle;
+                    cancel = true;
+                }
+
+                if (cancel) {
+                    focusView.requestFocus();
+                } else {
+                    String sAmount = txtAmount.getText().toString();
+                    String cleanString = sAmount.replaceAll("[$,]", "");
+                    Double dAmount = Double.parseDouble(cleanString);
+                    createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
+                }
+
             }
         });
-
+        EditText txtAmount = (EditText) findViewById(R.id.input_amount);
+        txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
         mAdapter = new ArrayRvAdapter() {
             @NonNull
             @Override
@@ -84,15 +108,15 @@ public class ViaticActivity extends AppCompatActivity {
             }
         };
     }
-    private void createViatic(String title, String description, String path) {
+    private void createViatic(String title, String description, Double amount, String path) {
         // inserting note in db and getting
         // newly inserted note id
-        long id = db.insertViatic(title, description, path);
+        long id = db.insertViatic(title, description,amount, path);
         finish();
-        /*// get the newly inserted note from db
+        // get the newly inserted note from db
         Viatic n = db.getViatic(id);
 
-        if (n != null) {
+        /*if (n != null) {
             // adding new note to array list at 0 position
             ViaticList.add(0, n);
 
@@ -106,9 +130,6 @@ public class ViaticActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             setPic();
-            /*Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imgView.setImageBitmap(imageBitmap);*/
         }
     }
 
@@ -127,18 +148,11 @@ public class ViaticActivity extends AppCompatActivity {
         OutputStream output;
         //noinspection SimplifiableIfStatement
         switch (id) {
-            /*case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;*/
-            /*case R.id.btnAttach:
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 1);
-                return true;*/
-            case R.id.btnDone:
 
-                txtTitle = (EditText) findViewById(R.id.input_title);
-                txtDescription = (EditText) findViewById(R.id.input_desc);
-                createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), mCurrentPhotoPath);
+            case R.id.btnAttach:
+                dispatchTakePictureIntent();
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -205,4 +219,5 @@ public class ViaticActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         imgView.setImageBitmap(bitmap);
     }
+
 }
