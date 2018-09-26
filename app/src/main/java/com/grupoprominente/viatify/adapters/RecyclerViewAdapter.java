@@ -38,14 +38,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolderItem(View itemView) {
             super(itemView);
-            viatico=viatico(R.id.)
+        }
+
+        // public ViewHolderItem(View itemView) {
+            //super(itemView);
+            //viatico=viatico(R.id.);
 
 
 
 
         }
     }
-}
+
 
 
 
