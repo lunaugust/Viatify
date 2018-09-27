@@ -16,6 +16,7 @@ public class Viatic {
     private Double amount;
     private String timestamp;
     private String imgpath;
+    private int color = -1;
 
 
 
@@ -85,6 +86,12 @@ public class Viatic {
         this.imgpath = imgpath;
     }
 
+    public int getColor() {
+        return color;
+    }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
 
 }

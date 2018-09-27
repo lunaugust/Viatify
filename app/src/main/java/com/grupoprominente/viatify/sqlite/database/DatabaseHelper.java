@@ -102,11 +102,11 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
             do {
                 Viatic viatic = new Viatic();
                 viatic.setId(cursor.getInt(cursor.getColumnIndex(viatic.COLUMN_ID)));
-                viatic.setTitle(cursor.getString(cursor.getColumnIndex(viatic.getTitle())));
-                viatic.setDescription(cursor.getString(cursor.getColumnIndex(viatic.getDescription())));
+                viatic.setTitle(cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_TITLE)));
+                viatic.setDescription(cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_DESCRIPTION)));
                 viatic.setAmount(cursor.getDouble(cursor.getColumnIndex(viatic.COLUMN_AMOUNT)));
                 viatic.setTimestamp(cursor.getString(cursor.getColumnIndex(viatic.COLUMN_TIMESTAMP)));
-                viatic.setImgpath(cursor.getString(cursor.getColumnIndex(viatic.getImgpath())));
+                viatic.setImgpath(cursor.getString(cursor.getColumnIndex(Viatic.COLUMN_IMGPATH)));
 
                 viatics.add(viatic);
             } while (cursor.moveToNext());

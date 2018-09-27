@@ -9,7 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
+//import android.support.v4.app.NavUtils;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +18,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+//import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.text.TextUtils;
 
 import android.support.v7.widget.Toolbar;
 import com.grupoprominente.viatify.R;
-import com.grupoprominente.viatify.adapters.ArrayRvAdapter;
+import com.grupoprominente.viatify.adapters.MessagesAdapter;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
 import com.grupoprominente.viatify.helpers.MoneyTextWatcher;
@@ -39,7 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ViaticActivity extends AppCompatActivity {
-    private ArrayRvAdapter mAdapter;
+    private MessagesAdapter mAdapter;
     private List<Viatic> ViaticList = new ArrayList<>();
     private ImageView imgView;
     private EditText txtTitle;
@@ -95,18 +95,7 @@ public class ViaticActivity extends AppCompatActivity {
         });
         EditText txtAmount = (EditText) findViewById(R.id.input_amount);
         txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
-        mAdapter = new ArrayRvAdapter() {
-            @NonNull
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return null;
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-            }
-        };
+        //mAdapter = new MessagesAdapter(ViaticList);
     }
     private void createViatic(String title, String description, Double amount, String path) {
         // inserting note in db and getting
@@ -116,14 +105,14 @@ public class ViaticActivity extends AppCompatActivity {
         // get the newly inserted note from db
         Viatic n = db.getViatic(id);
 
-        /*if (n != null) {
+        if (n != null) {
             // adding new note to array list at 0 position
             ViaticList.add(0, n);
 
             // refreshing the list
-            mAdapter.notifyDataSetChanged();
+            //mAdapter.notifyDataSetChanged();
 
-        }*/
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
