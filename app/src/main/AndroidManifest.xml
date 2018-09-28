@@ -56,7 +56,10 @@
         <activity
             android:name=".activities.MainNDActivity"
             android:label="@string/title_activity_main_nd"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+
+        </activity>
     </application>
 
 </manifest>
