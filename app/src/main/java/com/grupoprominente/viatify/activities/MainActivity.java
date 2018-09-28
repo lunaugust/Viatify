@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -30,7 +29,7 @@ import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
 //import info.androidhive.gmail.network.ApiInterface;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MessagesAdapter.MessageAdapterListener {
-    private List<Viatic> messages = new ArrayList<>();
+    private List<Viatic> viatics = new ArrayList<>();
     private RecyclerView recyclerView;
     private MessagesAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,13 +51,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 startActivity(new Intent(MainActivity.this, ViaticActivity.class));
             }
         });
+
         db = new DatabaseHelper(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        mAdapter = new MessagesAdapter(this, messages, this);
+        mAdapter = new MessagesAdapter(this, viatics, this);
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -77,23 +78,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
         );
     }
-
-    /**
-     * Fetches mail messages by making HTTP request
-     * url: https://api.androidhive.info/json/inbox.json
-     */
+    @Override
+    protected void onResume(){
+        super.onResume();
+        getInbox();
+    }
     private void getInbox() {
         swipeRefreshLayout.setRefreshing(true);
         if (db != null) {
-            final List<Viatic> lstViatics = db.getAllViatics();
+            viatics.clear();
+            List<Viatic> lstViatics = db.getAllViatics();
 
             if (lstViatics.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Lista de Viaticos Vacia ", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             } else {
-                for (Viatic viactic : lstViatics) {
+                for (Viatic viatic : lstViatics) {
                     // generate a random color
-                    viactic.setColor(getRandomMaterialColor("400"));
+                    viatic.setColor(getRandomMaterialColor("400"));
+                    viatics.add(viatic);
                 }
                 mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
@@ -160,9 +163,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void onIconImportantClicked(int position) {
         // Star icon is clicked,
         // mark the message as important
-        Viatic message = messages.get(position);
+        Viatic viatic = viatics.get(position);
         //message.setImportant(!message.isImportant());
-        messages.set(position, message);
+        viatics.set(position, viatic);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -174,12 +177,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             enableActionMode(position);
         } else {
             // read the message which removes bold from the row
-            Viatic message = messages.get(position);
+            Viatic viatic = viatics.get(position);
             //message.setRead(true);
-            messages.set(position, message);
+            viatics.set(position, viatic);
             mAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getApplicationContext(), "Read: " + message.getDescription(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Read: " + viatic.getDescription(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -229,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             switch (item.getItemId()) {
                 case R.id.action_delete:
                     // delete all the selected messages
-                    deleteMessages();
+                    deleteViatics();
                     mode.finish();
                     return true;
 
@@ -254,11 +257,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     // deleting the messages from recycler view
-    private void deleteMessages() {
+    private void deleteViatics() {
         mAdapter.resetAnimationIndex();
         List<Integer> selectedItemPositions =
                 mAdapter.getSelectedItems();
         for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
+            long viaticId = mAdapter.getItemId(selectedItemPositions.get(i));
+            Viatic viatic = db.getViatic(viaticId);
+            db.deleteViatic(viatic);
             mAdapter.removeData(selectedItemPositions.get(i));
         }
         mAdapter.notifyDataSetChanged();

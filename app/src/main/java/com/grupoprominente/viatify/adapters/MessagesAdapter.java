@@ -28,7 +28,7 @@ import com.grupoprominente.viatify.model.Viatic;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Viatic> messages;
+    private List<Viatic> viatics;
     private MessageAdapterListener listener;
     private SparseBooleanArray selectedItems;
 
@@ -41,20 +41,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     private static int currentSelectedIndex = -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        public TextView title, amount, description, iconText, timestamp;
+        public TextView title, description, amount, iconText, timestamp;
         public ImageView iconImp, imgProfile;
         public LinearLayout messageContainer;
         public RelativeLayout iconContainer, iconBack, iconFront;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            amount = (TextView) view.findViewById(R.id.amount);
-            description = (TextView) view.findViewById(R.id.description);
+            title = (TextView) view.findViewById(R.id.v_title);
+            description = (TextView) view.findViewById(R.id.v_description);
+            amount = (TextView) view.findViewById(R.id.v_amount);
             iconText = (TextView) view.findViewById(R.id.icon_text);
-            timestamp = (TextView) view.findViewById(R.id.timestamp);
+            timestamp = (TextView) view.findViewById(R.id.v_timestamp);
             iconBack = (RelativeLayout) view.findViewById(R.id.icon_back);
             iconFront = (RelativeLayout) view.findViewById(R.id.icon_front);
+            //iconImp = (ImageView) view.findViewById(R.id.icon_star);
             imgProfile = (ImageView) view.findViewById(R.id.icon_profile);
             messageContainer = (LinearLayout) view.findViewById(R.id.message_container);
             iconContainer = (RelativeLayout) view.findViewById(R.id.icon_container);
@@ -70,9 +71,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     }
 
 
-    public MessagesAdapter(Context mContext, List<Viatic> messages, MessageAdapterListener listener) {
+    public MessagesAdapter(Context mContext, List<Viatic> viatics, MessageAdapterListener listener) {
         this.mContext = mContext;
-        this.messages = messages;
+        this.viatics = viatics;
         this.listener = listener;
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
@@ -88,31 +89,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Viatic message = messages.get(position);
+        Viatic viatic = viatics.get(position);
 
         // displaying text view data
-        holder.title.setText(message.getTitle());
-        holder.amount.setText(message.getAmount().toString());
-        holder.description.setText(message.getDescription());
-        holder.timestamp.setText(message.getTimestamp());
+        holder.title.setText(viatic.getTitle());
+        holder.amount.setText(viatic.getAmount().toString());
+        holder.description.setText(viatic.getDescription());
+        holder.timestamp.setText(viatic.getTimestamp());
 
         // displaying the first letter of From in icon text
-        holder.iconText.setText(message.getTitle().substring(0, 1));
+        holder.iconText.setText(viatic.getTitle().substring(0, 1));
 
         // change the row state to activated
         holder.itemView.setActivated(selectedItems.get(position, false));
 
         /*// change the font style depending on message read status
-        applyReadStatus(holder, message);
+        applyReadStatus(holder, viatic);
 
         // handle message star
-        applyImportant(holder, message);*/
+        applyImportant(holder, viatic);*/
 
         // handle icon animation
         applyIconAnimation(holder, position);
 
         // display profile image
-        applyProfilePicture(holder, message);
+        applyProfilePicture(holder, viatic);
 
         // apply click events
         applyClickEvents(holder, position);
@@ -126,12 +127,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             }
         });
 
-        holder.iconImp.setOnClickListener(new View.OnClickListener() {
+        /*holder.iconImp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onIconImportantClicked(position);
             }
-        });
+        });*/
 
         holder.messageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,9 +151,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
         });
     }
 
-    private void applyProfilePicture(MyViewHolder holder, Viatic message) {
-        if (!TextUtils.isEmpty(message.getImgpath())) {
-            Glide.with(mContext).load(message.getImgpath())
+    private void applyProfilePicture(MyViewHolder holder, Viatic viatic) {
+        if (!TextUtils.isEmpty(viatic.getImgpath())) {
+            Glide.with(mContext).load(viatic.getImgpath())
                     .thumbnail(0.5f)
                     .crossFade()
                     .transform(new CircleTransform(mContext))
@@ -162,7 +163,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             holder.iconText.setVisibility(View.GONE);
         } else {
             holder.imgProfile.setImageResource(R.drawable.bg_circle);
-            holder.imgProfile.setColorFilter(message.getColor());
+            holder.imgProfile.setColorFilter(viatic.getColor());
             holder.iconText.setVisibility(View.VISIBLE);
         }
     }
@@ -205,20 +206,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
     @Override
     public long getItemId(int position) {
-        return messages.get(position).getId();
+        return viatics.get(position).getId();
     }
 
-    /*private void applyImportant(MyViewHolder holder, Viatic message) {
-        if (message.isImportant()) {
+    /*private void applyImportant(MyViewHolder holder, Viatic viatic) {
+        if (viatic.isImportant()) {
             holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_black_24dp));
             holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.icon_tint_selected));
         } else {
             holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_black_24dp));
             holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.icon_tint_normal));
         }
-    }*/
+    }
 
-    /*private void applyReadStatus(MyViewHolder holder, Viatic message) {
+    private void applyReadStatus(MyViewHolder holder, Message message) {
         if (message.isRead()) {
             holder.from.setTypeface(null, Typeface.NORMAL);
             holder.subject.setTypeface(null, Typeface.NORMAL);
@@ -234,7 +235,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return viatics.size();
     }
 
     public void toggleSelection(int pos) {
@@ -269,7 +270,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     }
 
     public void removeData(int position) {
-        messages.remove(position);
+        viatics.remove(position);
         resetCurrentIndex();
     }
 
