@@ -93,7 +93,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
         // displaying text view data
         holder.title.setText(viatic.getTitle());
-        holder.amount.setText(viatic.getAmount().toString());
+        holder.amount.setText("$" + viatic.getAmount().toString());
         holder.description.setText(viatic.getDescription());
         holder.timestamp.setText(viatic.getTimestamp());
 

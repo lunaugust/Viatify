@@ -41,6 +41,7 @@ public class ViaticActivity extends AppCompatActivity  {
     private EditText txtTitle;
     private EditText txtDescription;
     private EditText txtAmount;
+    private int viaticId;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
 
@@ -57,15 +58,16 @@ public class ViaticActivity extends AppCompatActivity  {
 
         db = new DatabaseHelper(this);
         imgView = (ImageView)findViewById(R.id.imgView);
+        txtTitle = (EditText) findViewById(R.id.input_title);
+        txtDescription = (EditText) findViewById(R.id.input_desc);
+        txtAmount = (EditText) findViewById(R.id.input_amount);
+        txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
         FloatingActionButton fabtnDone = (FloatingActionButton) findViewById(R.id.fabtnDone);
         fabtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean cancel = false;
                 View focusView = null;
-                txtTitle = (EditText) findViewById(R.id.input_title);
-                txtDescription = (EditText) findViewById(R.id.input_desc);
-                txtAmount = (EditText) findViewById(R.id.input_amount);
                 if (TextUtils.isEmpty(txtAmount.getText().toString()) ) {
                     txtAmount.setError(getString(R.string.error_field_required));
                     focusView = txtAmount;
@@ -83,33 +85,47 @@ public class ViaticActivity extends AppCompatActivity  {
                     String sAmount = txtAmount.getText().toString();
                     String cleanString = sAmount.replaceAll("[$,]", "");
                     Double dAmount = Double.parseDouble(cleanString);
-                    createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
-                }
+                    if (viaticId != 0)
+                    {
+                        updateViatic(viaticId, txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
+                    }
+                    else
+                    {
+                        createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
+                    }
 
+                }
             }
         });
-        EditText txtAmount = (EditText) findViewById(R.id.input_amount);
-        txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
-        //mAdapter = new MessagesAdapter(ViaticList);
+
+        Intent mIntent = getIntent();
+        viaticId = mIntent.getIntExtra("viaticId", 0);
+        if (viaticId != 0)
+        {
+            Viatic viatic = db.getViatic(viaticId);
+            txtTitle.setText(viatic.getTitle());
+            txtDescription.setText(viatic.getDescription());
+            txtAmount.setText(viatic.getAmount().toString());
+            mCurrentPhotoPath = viatic.getImgpath();
+            if (mCurrentPhotoPath != null) {
+                Uri uriImg = Uri.parse(mCurrentPhotoPath);
+                imgView.setImageURI(uriImg);
+            }
+        }
+
     }
     private void createViatic(String title, String description, Double amount, String path) {
-        // inserting note in db and getting
-        // newly inserted note id
+
         long id = db.insertViatic(title, description,amount, path);
         finish();
-        // get the newly inserted note from db
-        /*Viatic n = db.getViatic(id);
-
-        if (n != null) {
-            // adding new note to array list at 0 position
-            viatics.add(0, n);
-
-            // refreshing the list
-            mAdapter.notifyDataSetChanged();
-
-        }*/
-
     }
+
+    private void updateViatic(int id, String title, String description, Double amount, String path) {
+        Viatic viatic = new Viatic(id,title,description,amount,"0",path);
+        db.updateViatic(viatic);
+        finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

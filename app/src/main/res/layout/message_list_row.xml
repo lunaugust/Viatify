@@ -25,7 +25,6 @@
             android:id="@+id/v_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/from"
             android:textSize="@dimen/msg_text_primary"
@@ -37,9 +36,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="@color/subject"
+            android:textColor="@color/money"
             android:textSize="@dimen/msg_text_secondary"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/v_description"

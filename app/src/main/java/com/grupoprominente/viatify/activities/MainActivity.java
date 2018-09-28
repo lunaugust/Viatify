@@ -182,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             viatics.set(position, viatic);
             mAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getApplicationContext(), "Read: " + viatic.getDescription(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, ViaticActivity.class);
+            intent.putExtra("viaticId", viatic.getId());
+            startActivity(intent);
         }
     }
 
@@ -262,8 +264,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         List<Integer> selectedItemPositions =
                 mAdapter.getSelectedItems();
         for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
-            long viaticId = mAdapter.getItemId(selectedItemPositions.get(i));
-            Viatic viatic = db.getViatic(viaticId);
+            Viatic viatic = viatics.get(selectedItemPositions.get(i));
             db.deleteViatic(viatic);
             mAdapter.removeData(selectedItemPositions.get(i));
         }
