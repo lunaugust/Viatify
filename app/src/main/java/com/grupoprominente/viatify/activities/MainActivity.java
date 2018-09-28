@@ -25,8 +25,6 @@ import com.grupoprominente.viatify.adapters.MessagesAdapter;
 import com.grupoprominente.viatify.helpers.DividerItemDecoration;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
-//import info.androidhive.gmail.network.ApiClient;
-//import info.androidhive.gmail.network.ApiInterface;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MessagesAdapter.MessageAdapterListener {
     private List<Viatic> viatics = new ArrayList<>();
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 swipeRefreshLayout.setRefreshing(false);
             } else {
                 for (Viatic viatic : lstViatics) {
-                    // generate a random color
                     viatic.setColor(getRandomMaterialColor("400"));
                     viatics.add(viatic);
                 }
@@ -105,9 +102,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    /**
-     * chooses a random color from array.xml
-     */
     private int getRandomMaterialColor(String typeColor) {
         int returnColor = Color.GRAY;
         int arrayId = getResources().getIdentifier("mdcolor_" + typeColor, "array", getPackageName());
@@ -121,21 +115,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return returnColor;
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             Toast.makeText(getApplicationContext(), "Search...", Toast.LENGTH_SHORT).show();
             return true;
@@ -146,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        // swipe refresh is performed, fetch the messages again
         getInbox();
     }
 
@@ -161,24 +149,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onIconImportantClicked(int position) {
-        // Star icon is clicked,
-        // mark the message as important
         Viatic viatic = viatics.get(position);
-        //message.setImportant(!message.isImportant());
         viatics.set(position, viatic);
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMessageRowClicked(int position) {
-        // verify whether action mode is enabled or not
-        // if enabled, change the row state to activated
         if (mAdapter.getSelectedItemCount() > 0) {
             enableActionMode(position);
         } else {
-            // read the message which removes bold from the row
             Viatic viatic = viatics.get(position);
-            //message.setRead(true);
             viatics.set(position, viatic);
             mAdapter.notifyDataSetChanged();
 
@@ -190,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRowLongClicked(int position) {
-        // long press is performed, enable action mode
         enableActionMode(position);
     }
 
@@ -219,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_action_mode, menu);
 
-            // disable swipe refresh if action mode is enabled
             swipeRefreshLayout.setEnabled(false);
             return true;
         }
@@ -233,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    // delete all the selected messages
                     deleteViatics();
                     mode.finish();
                     return true;
@@ -252,13 +230,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 @Override
                 public void run() {
                     mAdapter.resetAnimationIndex();
-                    // mAdapter.notifyDataSetChanged();
                 }
             });
         }
     }
 
-    // deleting the messages from recycler view
     private void deleteViatics() {
         mAdapter.resetAnimationIndex();
         List<Integer> selectedItemPositions =

@@ -32,9 +32,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.grupoprominente.viatify.R;
+import com.grupoprominente.viatify.data.LoginSerializer;
 import com.grupoprominente.viatify.data.UserSerializer;
 import com.grupoprominente.viatify.model.LoginResponse;
 import com.grupoprominente.viatify.model.User;
@@ -326,7 +328,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if(loginResponse != null)
             {
-                UserSerializer.getInstance().save(LoginActivity.this, user);
+                loginResponse.setDate(new Date());
+                LoginSerializer.getInstance().save(LoginActivity.this, loginResponse);
             }
 
             // TODO: register the new account here.

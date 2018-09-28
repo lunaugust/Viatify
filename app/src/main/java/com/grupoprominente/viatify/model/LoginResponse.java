@@ -2,13 +2,18 @@ package com.grupoprominente.viatify.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
+import java.io.Serializable;
+import java.util.Date;
+
+public class LoginResponse implements Serializable {
     @SerializedName("access_token")
     private String token;
     @SerializedName("token_type")
     private String token_type;
     @SerializedName("expires_in")
     private int expires_in;
+    @SerializedName("date")
+    private Date date;
 
     public String getToken() {
         return token;
@@ -33,4 +38,8 @@ public class LoginResponse {
     public void setExpires_in(int expires_in) {
         this.expires_in = expires_in;
     }
+
+    public Date getDate() { return date; }
+
+    public void setDate(Date date) { this.date = date; }
 }

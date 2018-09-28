@@ -23,25 +23,25 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.SplashActivity"
-            android:label="Viatify"
             android:noHistory="true"
-            android:theme="@style/Splashscreen"></activity>
-        <activity
-            android:name=".activities.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Splashscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.ViaticActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -53,13 +53,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity
-            android:name=".activities.MainNDActivity"
-            android:label="@string/title_activity_main_nd"
-            android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
     </application>
 
 </manifest>
