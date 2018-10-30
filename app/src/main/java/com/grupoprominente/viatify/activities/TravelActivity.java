@@ -1,6 +1,5 @@
 package com.grupoprominente.viatify.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,7 +39,6 @@ public class TravelActivity extends AppCompatActivity  {
     private ImageView imgView;
     private EditText txtTitle;
     private EditText txtDescription;
-   // private EditText txtAmount;
     private int travelId;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
@@ -53,26 +51,20 @@ public class TravelActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         db = new DatabaseHelper(this);
-        imgView = (ImageView)findViewById(R.id.imgView);
-        txtTitle = (EditText) findViewById(R.id.input_title);
-        txtDescription = (EditText) findViewById(R.id.input_desc);
-       // txtAmount = (EditText) findViewById(R.id.input_amount);
-       // txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
+        imgView = findViewById(R.id.imgView);
+        txtTitle = findViewById(R.id.input_title);
+        txtDescription = findViewById(R.id.input_desc);
         FloatingActionButton fabtnDone = (FloatingActionButton) findViewById(R.id.fabtnDone);
         fabtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean cancel = false;
                 View focusView = null;
-               // focusView = txtAmount;
                 cancel = true;
-              //  if (TextUtils.isEmpty(txtAmount.getText().toString()) ) {
-              //      txtAmount.setError(getString(R.string.error_field_required));
-              //  }
 
                 if (TextUtils.isEmpty(txtTitle.getText().toString()) ) {
                     txtTitle.setError(getString(R.string.error_field_required));
@@ -83,9 +75,6 @@ public class TravelActivity extends AppCompatActivity  {
                 if (cancel) {
                     focusView.requestFocus();
                 } else {
-                //    String sAmount = txtAmount.getText().toString();
-                //    String cleanString = sAmount.replaceAll("[$,]", "");
-                //    Double dAmount = Double.parseDouble(cleanString);
                     if (travelId != 0)
                     {
                         updateTravel(travelId, txtTitle.getText().toString(), txtDescription.getText().toString(), mCurrentPhotoPath); //dAmount,
@@ -106,7 +95,6 @@ public class TravelActivity extends AppCompatActivity  {
             Travel travel = db.getTravel(travelId);
             txtTitle.setText(travel.getTitle());
             txtDescription.setText(travel.getDescription());
-            //txtAmount.setText(travel.getAmount().toString());
             mCurrentPhotoPath = travel.getImgpath();
             if (mCurrentPhotoPath != null) {
                 Uri uriImg = Uri.parse(mCurrentPhotoPath);

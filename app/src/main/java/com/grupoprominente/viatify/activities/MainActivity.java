@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         db = new DatabaseHelper(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        recyclerView = findViewById(R.id.recycler_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         mAdapter = new MessagesAdapter(this, viatics, this);
@@ -115,12 +115,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return returnColor;
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -147,12 +141,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         toggleSelection(position);
     }
 
-    @Override
-    public void onIconImportantClicked(int position) {
-        Viatic viatic = viatics.get(position);
-        viatics.set(position, viatic);
-        mAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onMessageRowClicked(int position) {

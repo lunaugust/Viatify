@@ -1,8 +1,6 @@
 package com.grupoprominente.viatify.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -48,17 +46,15 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.v_title);
-            description = (TextView) view.findViewById(R.id.v_description);
-          //  amount = (TextView) view.findViewById(R.id.v_amount);
-            iconText = (TextView) view.findViewById(R.id.icon_text);
-            timestamp = (TextView) view.findViewById(R.id.v_timestamp);
-            iconBack = (RelativeLayout) view.findViewById(R.id.icon_back);
-            iconFront = (RelativeLayout) view.findViewById(R.id.icon_front);
-            //iconImp = (ImageView) view.findViewById(R.id.icon_star);
-            imgProfile = (ImageView) view.findViewById(R.id.icon_profile);
-            messageContainer = (LinearLayout) view.findViewById(R.id.message_container);
-            iconContainer = (RelativeLayout) view.findViewById(R.id.icon_container);
+            title = view.findViewById(R.id.v_title);
+            description = view.findViewById(R.id.v_description);
+            iconText = view.findViewById(R.id.icon_text);
+            timestamp = view.findViewById(R.id.v_timestamp);
+            iconBack = view.findViewById(R.id.icon_back);
+            iconFront = view.findViewById(R.id.icon_front);
+            imgProfile = view.findViewById(R.id.icon_profile);
+            messageContainer = view.findViewById(R.id.message_container);
+            iconContainer = view.findViewById(R.id.icon_container);
             view.setOnLongClickListener(this);
         }
 
@@ -71,7 +67,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
     }
 
 
-    public TravelAdapter(Context mContext, List<Travel> viatics, MessageAdapterListener listener) {
+    public TravelAdapter(Context mContext, List<Travel> travels, MessageAdapterListener listener) {
         this.mContext = mContext;
         this.travels = travels;
         this.listener = listener;
@@ -103,12 +99,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
         // change the row state to activated
         holder.itemView.setActivated(selectedItems.get(position, false));
 
-        /*// change the font style depending on message read status
-        applyReadStatus(holder, viatic);
-
-        // handle message star
-        applyImportant(holder, viatic);*/
-
         // handle icon animation
         applyIconAnimation(holder, position);
 
@@ -126,13 +116,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
                 listener.onIconClicked(position);
             }
         });
-
-        /*holder.iconImp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onIconImportantClicked(position);
-            }
-        });*/
 
         holder.messageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,30 +192,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
         return travels.get(position).getId();
     }
 
-    /*private void applyImportant(MyViewHolder holder, Viatic viatic) {
-        if (viatic.isImportant()) {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_black_24dp));
-            holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.icon_tint_selected));
-        } else {
-            holder.iconImp.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_black_24dp));
-            holder.iconImp.setColorFilter(ContextCompat.getColor(mContext, R.color.icon_tint_normal));
-        }
-    }
-
-    private void applyReadStatus(MyViewHolder holder, Message message) {
-        if (message.isRead()) {
-            holder.from.setTypeface(null, Typeface.NORMAL);
-            holder.subject.setTypeface(null, Typeface.NORMAL);
-            holder.from.setTextColor(ContextCompat.getColor(mContext, R.color.subject));
-            holder.subject.setTextColor(ContextCompat.getColor(mContext, R.color.message));
-        } else {
-            holder.from.setTypeface(null, Typeface.BOLD);
-            holder.subject.setTypeface(null, Typeface.BOLD);
-            holder.from.setTextColor(ContextCompat.getColor(mContext, R.color.from));
-            holder.subject.setTextColor(ContextCompat.getColor(mContext, R.color.subject));
-        }
-    }*/
-
     @Override
     public int getItemCount() {
         return travels.size();
@@ -280,8 +239,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
 
     public interface MessageAdapterListener {
         void onIconClicked(int position);
-
-        void onIconImportantClicked(int position);
 
         void onMessageRowClicked(int position);
 

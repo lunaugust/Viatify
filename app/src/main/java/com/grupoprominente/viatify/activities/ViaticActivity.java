@@ -1,6 +1,5 @@
 package com.grupoprominente.viatify.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.text.TextUtils;
@@ -22,6 +22,9 @@ import android.support.v7.widget.Toolbar;
 
 import com.grupoprominente.viatify.R;
 import com.grupoprominente.viatify.adapters.MessagesAdapter;
+import com.grupoprominente.viatify.adapters.ServiceLineAdapter;
+import com.grupoprominente.viatify.data.ServiceLineSerializer;
+import com.grupoprominente.viatify.model.ServiceLine;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
 import com.grupoprominente.viatify.helpers.MoneyTextWatcher;
@@ -41,10 +44,11 @@ public class ViaticActivity extends AppCompatActivity  {
     private EditText txtTitle;
     private EditText txtDescription;
     private EditText txtAmount;
+    private AutoCompleteTextView txtServiceLine;
+    private ServiceLineAdapter serviceLineAdapter;
     private int viaticId;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
-
 
     private DatabaseHelper db;
 
@@ -53,16 +57,22 @@ public class ViaticActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viatic);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         db = new DatabaseHelper(this);
-        imgView = (ImageView)findViewById(R.id.imgView);
-        txtTitle = (EditText) findViewById(R.id.input_title);
-        txtDescription = (EditText) findViewById(R.id.input_desc);
-        txtAmount = (EditText) findViewById(R.id.input_amount);
+        imgView = findViewById(R.id.imgView);
+        txtTitle = findViewById(R.id.input_title);
+        txtDescription =  findViewById(R.id.input_desc);
+        txtAmount = findViewById(R.id.input_amount);
         txtAmount.addTextChangedListener(new MoneyTextWatcher(txtAmount));
-        FloatingActionButton fabtnDone = (FloatingActionButton) findViewById(R.id.fabtnDone);
+        txtServiceLine = findViewById(R.id.input_service_line);
+        List<ServiceLine> lstServiceLine = ServiceLineSerializer.getInstance().load(ViaticActivity.this);
+        if(lstServiceLine != null){
+            serviceLineAdapter = new ServiceLineAdapter(this,android.R.layout.simple_dropdown_item_1line,lstServiceLine);
+        }
+        txtServiceLine.setAdapter(serviceLineAdapter);
+
+        FloatingActionButton fabtnDone = findViewById(R.id.fabtnDone);
         fabtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +124,11 @@ public class ViaticActivity extends AppCompatActivity  {
         }
 
     }
+
+    protected void onResume(){
+        super.onResume();
+    }
+
     private void createViatic(String title, String description, Double amount, String path) {
 
         long id = db.insertViatic(title, description,amount, path);
@@ -220,9 +235,4 @@ public class ViaticActivity extends AppCompatActivity  {
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         imgView.setImageBitmap(bitmap);
     }
-
-
-
-
-
 }

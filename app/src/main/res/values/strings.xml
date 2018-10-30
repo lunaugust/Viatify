@@ -17,6 +17,7 @@
     <string name="prompt_title">Título</string>
     <string name="prompt_description">Descripción</string>
     <string name="prompt_amount">Monto</string>
+    <string name="prompt_service_line">Línea de servicio</string>
     <string name="prompt_date">mm/dd/aaaa</string>
 
     <!-- Ya definidos<string name="app_name">Gmail</string>
