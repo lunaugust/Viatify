@@ -1,19 +1,8 @@
 package com.grupoprominente.viatify.model;
 
 public class Organizations {
-    public static final String TABLE_NAME = "organizations";
-
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_TITLE = "title";
-
     private int id;
     private String title;
-
-    public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
-                    + COLUMN_ID + " INTEGER PRIMARY KEY, "
-                    + COLUMN_TITLE + " TEXT "
-                    + ")";
 
     public Organizations() {
     }
@@ -23,8 +12,8 @@ public class Organizations {
         this.title  = title;
     }
 
-    public Integer getId() {
-        return Integer.valueOf(id);
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

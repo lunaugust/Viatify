@@ -7,17 +7,20 @@ public class Viatic {
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_AMOUNT = "amount";
+    public static final String COLUMN_CURRENCY = "currency";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_IMGPATH = "imgpath";
+    public static final String COLUMN_SERVICELINE = "service_line";
 
     private int id;
     private String title;
     private String description;
     private Double amount;
+    private String currency;
     private String timestamp;
     private String imgpath;
     private int color = -1;
-
+    private int serviceline;
 
 
     public static final String CREATE_TABLE =
@@ -26,21 +29,31 @@ public class Viatic {
                     + COLUMN_TITLE + " TEXT, "
                     + COLUMN_DESCRIPTION + " TEXT, "
                     + COLUMN_AMOUNT + " REAL, "
+                    + COLUMN_CURRENCY + " TEXT, "
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
-                    + COLUMN_IMGPATH + " TEXT"
+                    + COLUMN_IMGPATH + " TEXT,"
+                    + COLUMN_SERVICELINE + " INTEGER"
                     + ")";
 
     public Viatic() {
     }
 
-    public Viatic(int id, String title, String description, Double amount, String timestamp, String imgpath){
+
+    public Viatic(int id, String title, String description, Double amount, String currency, String timestamp, String imgpath, int service_line){
         this.id = id;
         this.title  = title;
         this.description = description;
         this.amount = amount;
+        this.currency = currency;
         this.timestamp = timestamp;
         this.imgpath = imgpath;
+        this.serviceline = service_line;
+
     }
+
+    public String getCurrency() { return currency;}
+
+    public void setCurrency(String currency) { this.currency = currency; }
 
     public int getId() {
         return id;
@@ -93,5 +106,9 @@ public class Viatic {
     public void setColor(int color) {
         this.color = color;
     }
+
+    public int getServiceline() { return serviceline; }
+
+    public void setServiceline(int serviceline) { this.serviceline = serviceline; }
 
 }

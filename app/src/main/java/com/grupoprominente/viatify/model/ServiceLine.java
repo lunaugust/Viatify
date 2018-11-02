@@ -38,6 +38,6 @@ public class ServiceLine implements Serializable {
 
     @Override
     public String toString() {
-        return title;
+        return title + "-" + sub_org.getTitle() + "-" + sub_org.getOrg().getTitle();
     }
 }

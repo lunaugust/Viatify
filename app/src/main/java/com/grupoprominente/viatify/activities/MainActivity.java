@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return returnColor;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onRefresh() {

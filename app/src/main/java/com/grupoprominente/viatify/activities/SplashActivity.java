@@ -5,7 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.grupoprominente.viatify.data.LoginSerializer;
+import com.grupoprominente.viatify.data.OrganizationsData;
+import com.grupoprominente.viatify.data.ServiceLineData;
 import com.grupoprominente.viatify.data.ServiceLineSerializer;
+import com.grupoprominente.viatify.data.SubOrganizationsData;
+import com.grupoprominente.viatify.helpers.BinarySearch;
 import com.grupoprominente.viatify.model.LoginResponse;
 import com.grupoprominente.viatify.model.Organization;
 import com.grupoprominente.viatify.model.Organizations;
@@ -57,29 +61,26 @@ public class SplashActivity extends AppCompatActivity {
 
     }
     private void saveServiceLines(){
-        DatabaseHelper db = new DatabaseHelper(this);
         List<ServiceLines> lstServiceLines;
         List<SubOrganizations> lstSubOrganizations;
         List<Organizations> lstOrganizations;
         List<ServiceLine> lstServiceLine = new ArrayList<>();
-        if (db != null){
-            lstServiceLines = db.getAllServiceLines();
-            lstSubOrganizations = db.getAllSubOrganizations();
-            lstOrganizations = db.getAllOrganizations();
+        lstServiceLines = ServiceLineData.getAll();
+        lstSubOrganizations = SubOrganizationsData.getAll();
+        lstOrganizations = OrganizationsData.getAll();
 
-            for (ServiceLines service_lines: lstServiceLines) {
-                SubOrganizations subOrgs = lstSubOrganizations.get(service_lines.getSub_org_id()-1);
-                Organizations orgs = lstOrganizations.get(subOrgs.getOrg_id()-1);
-                Organization org = new Organization(orgs.getId(), orgs.getTitle());
-                SubOrganization subOrg = new SubOrganization(subOrgs.getId(),subOrgs.getTitle(), org);
-                ServiceLine serviceLine = new ServiceLine(service_lines.getId(),service_lines.getTitle(), subOrg);
-                lstServiceLine.add(serviceLine);
-            }
-            if (lstServiceLine.size() > 0){
-                ServiceLineSerializer.getInstance().save(SplashActivity.this, lstServiceLine);
-            }
-
+        for (ServiceLines service_lines: lstServiceLines) {
+            int position = BinarySearch.SubOrgPosition(lstSubOrganizations, service_lines.getSub_org_id());
+            SubOrganizations subOrgs = lstSubOrganizations.get(position);
+            position = BinarySearch.OrganizationPosition(lstOrganizations, subOrgs.getOrg_id());
+            Organizations orgs = lstOrganizations.get(position);
+            Organization org = new Organization(orgs.getId(), orgs.getTitle());
+            SubOrganization subOrg = new SubOrganization(subOrgs.getId(),subOrgs.getTitle(), org);
+            ServiceLine serviceLine = new ServiceLine(service_lines.getId(),service_lines.getTitle(), subOrg);
+            lstServiceLine.add(serviceLine);
         }
-
+        if (lstServiceLine.size() > 0){
+            ServiceLineSerializer.getInstance().save(SplashActivity.this, lstServiceLine);
+        }
     }
 }

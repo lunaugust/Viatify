@@ -1,22 +1,13 @@
 package com.grupoprominente.viatify.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SubOrganizations {
-    public static final String TABLE_NAME = "sub_organizations";
-
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_ORG_ID = "org_id";
-
     private int id;
     private String title;
     private int org_id;
 
-    public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
-                    + COLUMN_ID + " INTEGER PRIMARY KEY, "
-                    + COLUMN_TITLE + " TEXT, "
-                    + COLUMN_ORG_ID + " INTEGER"
-                    + ")";
 
     public SubOrganizations() {
     }
@@ -27,15 +18,13 @@ public class SubOrganizations {
         this.org_id = org_id;
     }
 
-    public Integer getId() {
-        return Integer.valueOf(id);
-    }
+    public int getId() { return id;}
 
     public String getTitle() {
         return title;
     }
 
-    public Integer getOrg_id() { return Integer.valueOf(org_id);  }
+    public int getOrg_id() { return org_id;  }
 
     public void setId(int id) {
         this.id = id;
@@ -46,5 +35,6 @@ public class SubOrganizations {
     }
 
     public void setOrg_id(int org_id) { this.org_id = org_id; }
+
 
 }

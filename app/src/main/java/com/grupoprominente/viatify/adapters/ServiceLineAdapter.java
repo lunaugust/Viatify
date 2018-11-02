@@ -1,15 +1,19 @@
 package com.grupoprominente.viatify.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Filter;
+
+import com.grupoprominente.viatify.R;
 import com.grupoprominente.viatify.model.ServiceLine;
 import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +21,14 @@ public class ServiceLineAdapter extends ArrayAdapter<ServiceLine> {
 
     private Context context;
     private List<ServiceLine> serviceLineList, tempItems, suggestions;
+    private int textViewResourceId;
 
     public ServiceLineAdapter(Context context, int textViewResourceId,
                               List<ServiceLine> serviceLineList) {
         super(context, textViewResourceId, serviceLineList);
         this.context = context;
         this.serviceLineList = serviceLineList;
+        this.textViewResourceId = textViewResourceId;
         tempItems = new ArrayList<>(serviceLineList);
         suggestions = new ArrayList<>();
         }
@@ -37,6 +43,8 @@ public class ServiceLineAdapter extends ArrayAdapter<ServiceLine> {
         return serviceLineList.get(position);
     }
 
+    public int getPosition(int id) { return serviceLineList.indexOf(new ServiceLine(id,null,null));}
+
     @Override
     public long getItemId(int position){
         return position;
@@ -46,19 +54,27 @@ public class ServiceLineAdapter extends ArrayAdapter<ServiceLine> {
         return serviceLineList.get(position).getId();
     }
 
-    // And the "magic" goes here
-    // This is for the "passive" state of the spinner
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
-        TextView label = (TextView) super.getView(position, convertView, parent);
-        label.setTextColor(Color.BLACK);
-        // Then you can get the current item using the values array (Users array) and the current position
-        // You can NOW reference each method you has created in your bean object (User class)
-        label.setText(serviceLineList.get(position).getTitle());
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View view = convertView;
+        LayoutInflater inflater;
+        try{
+            if (convertView == null) {
+                inflater = ((Activity) context).getLayoutInflater();
+                view = inflater.inflate(textViewResourceId, parent, false);
+            }
+            ServiceLine serviceLine = serviceLineList.get(position);
+            TextView txtTitle = view.findViewById(R.id.txtTitle);
+            TextView txtSubTitle = view.findViewById(R.id.txtSubTitle);
+            txtTitle.setText(serviceLine.getTitle());
+            txtSubTitle.setText(serviceLine.getSub_org().getTitle() + " - " + serviceLine.getSub_org().getOrg().getTitle());
 
-        // And finally return your dynamic (or custom) view for each spinner item
-        return label;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return view;
     }
 
     // And here is when the "chooser" is popped up
@@ -90,7 +106,7 @@ public class ServiceLineAdapter extends ArrayAdapter<ServiceLine> {
             if (charSequence != null) {
                 suggestions.clear();
                 for (ServiceLine serviceLine : tempItems) {
-                    if (serviceLine.getTitle().toLowerCase().startsWith(charSequence.toString().toLowerCase())) {
+                    if (serviceLine.toString().toLowerCase().contains(charSequence.toString().toLowerCase())) {
                         suggestions.add(serviceLine);
                     }
                 }
@@ -111,8 +127,9 @@ public class ServiceLineAdapter extends ArrayAdapter<ServiceLine> {
                 clear();
                 for (ServiceLine serviceLine : tempValues) {
                     add(serviceLine);
-                    notifyDataSetChanged();
+
                 }
+                notifyDataSetChanged();
             } else {
                 clear();
                 notifyDataSetChanged();

@@ -13,17 +13,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.text.TextUtils;
 
 import android.support.v7.widget.Toolbar;
+import android.widget.Spinner;
 
 import com.grupoprominente.viatify.R;
 import com.grupoprominente.viatify.adapters.MessagesAdapter;
 import com.grupoprominente.viatify.adapters.ServiceLineAdapter;
 import com.grupoprominente.viatify.data.ServiceLineSerializer;
+import com.grupoprominente.viatify.helpers.BinarySearch;
 import com.grupoprominente.viatify.model.ServiceLine;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
@@ -46,7 +50,11 @@ public class ViaticActivity extends AppCompatActivity  {
     private EditText txtAmount;
     private AutoCompleteTextView txtServiceLine;
     private ServiceLineAdapter serviceLineAdapter;
+    private int selectedServiceLineId;
     private int viaticId;
+    private Spinner spCurrency;
+    private ArrayAdapter<String> currencyAdapter;
+    private String[] currency = {"ARS", "USD"};
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
 
@@ -68,9 +76,18 @@ public class ViaticActivity extends AppCompatActivity  {
         txtServiceLine = findViewById(R.id.input_service_line);
         List<ServiceLine> lstServiceLine = ServiceLineSerializer.getInstance().load(ViaticActivity.this);
         if(lstServiceLine != null){
-            serviceLineAdapter = new ServiceLineAdapter(this,android.R.layout.simple_dropdown_item_1line,lstServiceLine);
+            serviceLineAdapter = new ServiceLineAdapter(this,R.layout.list_item,lstServiceLine);
         }
         txtServiceLine.setAdapter(serviceLineAdapter);
+        txtServiceLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                  selectedServiceLineId = serviceLineAdapter.getServiceLineAdapterId(position);
+              }
+          });
+        spCurrency = findViewById(R.id.spiner_currency);
+        currencyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, currency);
+        spCurrency.setAdapter(currencyAdapter);
 
         FloatingActionButton fabtnDone = findViewById(R.id.fabtnDone);
         fabtnDone.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +105,11 @@ public class ViaticActivity extends AppCompatActivity  {
                     focusView = txtTitle;
                     cancel = true;
                 }
+                if (TextUtils.isEmpty(txtServiceLine.getText().toString()) ) {
+                    txtServiceLine.setError(getString(R.string.error_field_required));
+                    focusView = txtServiceLine;
+                    cancel = true;
+                }
 
                 if (cancel) {
                     focusView.requestFocus();
@@ -97,11 +119,11 @@ public class ViaticActivity extends AppCompatActivity  {
                     Double dAmount = Double.parseDouble(cleanString);
                     if (viaticId != 0)
                     {
-                        updateViatic(viaticId, txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
+                        updateViatic(viaticId, txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(), mCurrentPhotoPath, selectedServiceLineId);
                     }
                     else
                     {
-                        createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, mCurrentPhotoPath);
+                        createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(),mCurrentPhotoPath, selectedServiceLineId);
                     }
 
                 }
@@ -112,10 +134,15 @@ public class ViaticActivity extends AppCompatActivity  {
         viaticId = mIntent.getIntExtra("viaticId", 0);
         if (viaticId != 0)
         {
-            Viatic viatic = db.getViatic(viaticId);
+            final Viatic viatic = db.getViatic(viaticId);
             txtTitle.setText(viatic.getTitle());
             txtDescription.setText(viatic.getDescription());
             txtAmount.setText(viatic.getAmount().toString());
+            spCurrency.setSelection(currencyAdapter.getPosition(viatic.getCurrency()));
+            int position = BinarySearch.serviceLinePosition(lstServiceLine, viatic.getServiceline());
+            if (position != -1) {
+                txtServiceLine.setListSelection(position);
+            }
             mCurrentPhotoPath = viatic.getImgpath();
             if (mCurrentPhotoPath != null) {
                 Uri uriImg = Uri.parse(mCurrentPhotoPath);
@@ -129,14 +156,14 @@ public class ViaticActivity extends AppCompatActivity  {
         super.onResume();
     }
 
-    private void createViatic(String title, String description, Double amount, String path) {
+    private void createViatic(String title, String description, Double amount, String currency ,String path, int serviceLineId) {
 
-        long id = db.insertViatic(title, description,amount, path);
+        long id = db.insertViatic(title, description,amount, currency, path, serviceLineId);
         finish();
     }
 
-    private void updateViatic(int id, String title, String description, Double amount, String path) {
-        Viatic viatic = new Viatic(id,title,description,amount,"0",path);
+    private void updateViatic(int id, String title, String description, Double amount, String currency, String path, int serviceLineId) {
+        Viatic viatic = new Viatic(id,title,description,amount, currency,"0",path,serviceLineId);
         db.updateViatic(viatic);
         finish();
     }

@@ -1,22 +1,9 @@
 package com.grupoprominente.viatify.model;
 
 public class ServiceLines {
-    public static final String TABLE_NAME = "service_lines";
-
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_SUB_ORG_ID = "sub_org_id";
-
     private int id;
     private String title;
     private int sub_org_id;
-
-    public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
-                    + COLUMN_ID + " INTEGER PRIMARY KEY, "
-                    + COLUMN_TITLE + " TEXT, "
-                    + COLUMN_SUB_ORG_ID + " INTEGER"
-                    + ")";
 
     public ServiceLines() {
     }
