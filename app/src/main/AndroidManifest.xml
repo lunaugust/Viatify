@@ -24,6 +24,7 @@
         <activity
             android:name=".activities.SplashActivity"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Splashscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +42,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.ViaticActivity"
+            android:label="@string/title_activity_viatic"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

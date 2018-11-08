@@ -24,10 +24,10 @@ import com.grupoprominente.viatify.helpers.CircleTransform;
 import com.grupoprominente.viatify.helpers.FlipAnimator;
 import com.grupoprominente.viatify.model.Viatic;
 
-public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
+public class ViaticsAdapter extends RecyclerView.Adapter<ViaticsAdapter.MyViewHolder> {
     private Context mContext;
     private List<Viatic> viatics;
-    private MessageAdapterListener listener;
+    private ViaticAdapterListener listener;
     private SparseBooleanArray selectedItems;
 
     // array used to perform multiple animation at once
@@ -41,7 +41,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         public TextView title, description, amount, iconText, timestamp;
         public ImageView iconImp, imgProfile;
-        public LinearLayout messageContainer;
+        public LinearLayout viaticContainer;
         public RelativeLayout iconContainer, iconBack, iconFront;
 
         public MyViewHolder(View view) {
@@ -54,7 +54,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             iconBack = view.findViewById(R.id.icon_back);
             iconFront = view.findViewById(R.id.icon_front);
             imgProfile = view.findViewById(R.id.icon_profile);
-            messageContainer = view.findViewById(R.id.message_container);
+            viaticContainer = view.findViewById(R.id.viatic_container);
             iconContainer = view.findViewById(R.id.icon_container);
             view.setOnLongClickListener(this);
         }
@@ -68,7 +68,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     }
 
 
-    public MessagesAdapter(Context mContext, List<Viatic> viatics, MessageAdapterListener listener) {
+    public ViaticsAdapter(Context mContext, List<Viatic> viatics, ViaticAdapterListener listener) {
         this.mContext = mContext;
         this.viatics = viatics;
         this.listener = listener;
@@ -118,14 +118,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             }
         });
 
-        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
+        holder.viaticContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onMessageRowClicked(position);
+                listener.onViaticRowClicked(position);
             }
         });
 
-        holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.viaticContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 listener.onRowLongClicked(position);
@@ -233,10 +233,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
         currentSelectedIndex = -1;
     }
 
-    public interface MessageAdapterListener {
+    public interface ViaticAdapterListener {
         void onIconClicked(int position);
 
-        void onMessageRowClicked(int position);
+        void onViaticRowClicked(int position);
 
         void onRowLongClicked(int position);
     }

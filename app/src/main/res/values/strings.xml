@@ -19,13 +19,9 @@
     <string name="prompt_amount">Monto</string>
     <string name="prompt_service_line">Línea de servicio</string>
     <string name="prompt_date">mm/dd/aaaa</string>
-
-    <!-- Ya definidos<string name="app_name">Gmail</string>
-    <string name="action_settings">Settings</string> -->
-
     <string name="action_search">Buscar</string>
     <string name="action_delete">Borrar</string>
-    <string name="action_send">Enviar</string>
+    <string name="action_send">Asociar a un viaje</string>
     <string name="title_activity_main_nd">MainNDActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

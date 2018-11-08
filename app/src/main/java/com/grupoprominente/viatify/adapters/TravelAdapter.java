@@ -53,7 +53,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
             iconBack = view.findViewById(R.id.icon_back);
             iconFront = view.findViewById(R.id.icon_front);
             imgProfile = view.findViewById(R.id.icon_profile);
-            messageContainer = view.findViewById(R.id.message_container);
+            messageContainer = view.findViewById(R.id.viatic_container);
             iconContainer = view.findViewById(R.id.icon_container);
             view.setOnLongClickListener(this);
         }

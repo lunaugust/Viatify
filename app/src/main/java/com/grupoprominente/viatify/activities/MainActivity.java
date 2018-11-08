@@ -21,15 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.grupoprominente.viatify.R;
-import com.grupoprominente.viatify.adapters.MessagesAdapter;
+import com.grupoprominente.viatify.adapters.ViaticsAdapter;
+import com.grupoprominente.viatify.constants.AppConstants;
 import com.grupoprominente.viatify.helpers.DividerItemDecoration;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MessagesAdapter.MessageAdapterListener {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, ViaticsAdapter.ViaticAdapterListener {
     private List<Viatic> viatics = new ArrayList<>();
     private RecyclerView recyclerView;
-    private MessagesAdapter mAdapter;
+    private ViaticsAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionModeCallback actionModeCallback;
     private ActionMode actionMode;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        mAdapter = new MessagesAdapter(this, viatics, this);
+        mAdapter = new ViaticsAdapter(this, viatics, this);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -115,18 +116,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return returnColor;
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_search) {
-            Toast.makeText(getApplicationContext(), "Search...", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
     @Override
     public void onRefresh() {
         getInbox();
@@ -143,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     @Override
-    public void onMessageRowClicked(int position) {
+    public void onViaticRowClicked(int position) {
         if (mAdapter.getSelectedItemCount() > 0) {
             enableActionMode(position);
         } else {
@@ -152,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             mAdapter.notifyDataSetChanged();
 
             Intent intent = new Intent(MainActivity.this, ViaticActivity.class);
-            intent.putExtra("viaticId", viatic.getId());
+            intent.putExtra(AppConstants.SELECTED_VIATIC, viatic.getId());
             startActivity(intent);
         }
     }
@@ -204,6 +193,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     mode.finish();
                     return true;
 
+                case R.id.action_send:
+                    Intent intent = new Intent(MainActivity.this, TravelActivity.class);
+                    //intent.putExtra(AppConstants.SELECTED_VIATICS, ;
+                    startActivity(intent);
                 default:
                     return false;
             }

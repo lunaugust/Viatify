@@ -1,5 +1,7 @@
 package com.grupoprominente.viatify.activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,16 +18,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.text.TextUtils;
 
 import android.support.v7.widget.Toolbar;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import com.grupoprominente.viatify.R;
-import com.grupoprominente.viatify.adapters.MessagesAdapter;
 import com.grupoprominente.viatify.adapters.ServiceLineAdapter;
+import com.grupoprominente.viatify.constants.AppConstants;
 import com.grupoprominente.viatify.data.ServiceLineSerializer;
 import com.grupoprominente.viatify.helpers.BinarySearch;
 import com.grupoprominente.viatify.model.ServiceLine;
@@ -37,28 +41,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ViaticActivity extends AppCompatActivity  {
-    private List<Viatic> viatics = new ArrayList<>();
-    private MessagesAdapter mAdapter;
     private ImageView imgView;
     private EditText txtTitle;
     private EditText txtDescription;
     private EditText txtAmount;
     private AutoCompleteTextView txtServiceLine;
     private ServiceLineAdapter serviceLineAdapter;
+    private EditText txtDate;
+    private EditText txtTime;
     private int selectedServiceLineId;
     private int viaticId;
     private Spinner spCurrency;
     private ArrayAdapter<String> currencyAdapter;
     private String[] currency = {"ARS", "USD"};
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    String mCurrentPhotoPath;
-
     private DatabaseHelper db;
+    String mCurrentPhotoPath;
+    Calendar calendar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +116,11 @@ public class ViaticActivity extends AppCompatActivity  {
                     focusView = txtServiceLine;
                     cancel = true;
                 }
+                if (selectedServiceLineId == 0){
+                    txtServiceLine.setError(getString(R.string.error_field_required));
+                    focusView = txtServiceLine;
+                    cancel = true;
+                }
 
                 if (cancel) {
                     focusView.requestFocus();
@@ -117,21 +128,64 @@ public class ViaticActivity extends AppCompatActivity  {
                     String sAmount = txtAmount.getText().toString();
                     String cleanString = sAmount.replaceAll("[$,]", "");
                     Double dAmount = Double.parseDouble(cleanString);
+                    String sTimeStamp = txtDate.getText() + " " + txtTime.getText();
                     if (viaticId != 0)
                     {
-                        updateViatic(viaticId, txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(), mCurrentPhotoPath, selectedServiceLineId);
+                        updateViatic(viaticId, txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(), mCurrentPhotoPath, selectedServiceLineId, sTimeStamp);
                     }
                     else
                     {
-                        createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(),mCurrentPhotoPath, selectedServiceLineId);
+                        createViatic(txtTitle.getText().toString(), txtDescription.getText().toString(), dAmount, spCurrency.getSelectedItem().toString(),mCurrentPhotoPath, selectedServiceLineId, sTimeStamp);
                     }
-
                 }
             }
         });
 
+        calendar = Calendar.getInstance();
+
+        txtDate = findViewById(R.id.input_date);
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateTextDate();
+            }
+
+        };
+
+        txtDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog dialog = new DatePickerDialog(ViaticActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+                dialog.show();
+            }
+        });
+
+        txtTime = findViewById(R.id.input_time);
+        final TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                updateTextTime();
+            }
+        };
+
+        txtTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog tDialog = new TimePickerDialog(ViaticActivity.this,time,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+                tDialog.show();
+            }
+        });
+
         Intent mIntent = getIntent();
-        viaticId = mIntent.getIntExtra("viaticId", 0);
+        viaticId = mIntent.getIntExtra(AppConstants.SELECTED_VIATIC, 0);
         if (viaticId != 0)
         {
             final Viatic viatic = db.getViatic(viaticId);
@@ -142,28 +196,54 @@ public class ViaticActivity extends AppCompatActivity  {
             int position = BinarySearch.serviceLinePosition(lstServiceLine, viatic.getServiceline());
             if (position != -1) {
                 txtServiceLine.setListSelection(position);
+                txtServiceLine.setText(lstServiceLine.get(position).getTitle());
+                selectedServiceLineId = viatic.getServiceline();
             }
             mCurrentPhotoPath = viatic.getImgpath();
             if (mCurrentPhotoPath != null) {
                 Uri uriImg = Uri.parse(mCurrentPhotoPath);
                 imgView.setImageURI(uriImg);
             }
+            SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+            Date convertedDate = new Date();
+            try {
+                convertedDate = dateFormat.parse(viatic.getTimestamp());
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+            calendar.setTime(convertedDate);
         }
 
+        updateTextDate();
+        updateTextTime();
     }
 
     protected void onResume(){
         super.onResume();
     }
 
-    private void createViatic(String title, String description, Double amount, String currency ,String path, int serviceLineId) {
+    private void updateTextDate() {
+        String myFormat = AppConstants.DATE_FORMAT;
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
-        long id = db.insertViatic(title, description,amount, currency, path, serviceLineId);
+        txtDate.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void updateTextTime() {
+        String myFormat = AppConstants.TIME_FORMAT;
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+        txtTime.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void createViatic(String title, String description, Double amount, String currency ,String path, int serviceLineId, String timeStamp) {
+
+        long id = db.insertViatic(title, description,amount, currency, path, serviceLineId, timeStamp);
         finish();
     }
 
-    private void updateViatic(int id, String title, String description, Double amount, String currency, String path, int serviceLineId) {
-        Viatic viatic = new Viatic(id,title,description,amount, currency,"0",path,serviceLineId);
+    private void updateViatic(int id, String title, String description, Double amount, String currency, String path, int serviceLineId, String timeStamp) {
+        Viatic viatic = new Viatic(id,title,description,amount, currency,timeStamp,path,serviceLineId);
         db.updateViatic(viatic);
         finish();
     }
@@ -182,6 +262,7 @@ public class ViaticActivity extends AppCompatActivity  {
         getMenuInflater().inflate(R.menu.menu_viatic, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -191,15 +272,14 @@ public class ViaticActivity extends AppCompatActivity  {
         OutputStream output;
         //noinspection SimplifiableIfStatement
         switch (id) {
-
             case R.id.btnAttach:
                 dispatchTakePictureIntent();
                 return true;
-
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -215,7 +295,6 @@ public class ViaticActivity extends AppCompatActivity  {
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

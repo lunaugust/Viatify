@@ -30,7 +30,7 @@ public class Viatic {
                     + COLUMN_DESCRIPTION + " TEXT, "
                     + COLUMN_AMOUNT + " REAL, "
                     + COLUMN_CURRENCY + " TEXT, "
-                    + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                    + COLUMN_TIMESTAMP + " DATETIME, "
                     + COLUMN_IMGPATH + " TEXT,"
                     + COLUMN_SERVICELINE + " INTEGER"
                     + ")";

@@ -7,16 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import com.grupoprominente.viatify.model.ServiceLines;
-import com.grupoprominente.viatify.model.SubOrganizations;
 import com.grupoprominente.viatify.model.Viatic;
 import com.grupoprominente.viatify.model.Travel;
-import com.grupoprominente.viatify.model.Organizations;
 
 public class DatabaseHelper  extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
@@ -48,7 +42,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // Create tables again
         onCreate(db);
     }
-    public long insertViatic(String title, String description, Double amount, String currency, String path, int serviceLine) {
+    public long insertViatic(String title, String description, Double amount, String currency, String path, int serviceLine, String timeStamp) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -61,6 +55,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         values.put(Viatic.COLUMN_CURRENCY, currency);
         values.put(Viatic.COLUMN_IMGPATH, path);
         values.put(Viatic.COLUMN_SERVICELINE, serviceLine);
+        values.put(Viatic.COLUMN_TIMESTAMP, timeStamp);
 
         // insert row
         long id = db.insert(Viatic.TABLE_NAME, null, values);
@@ -243,6 +238,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         values.put(viatic.COLUMN_CURRENCY, viatic.getCurrency());
         values.put(viatic.COLUMN_IMGPATH, viatic.getImgpath());
         values.put(viatic.COLUMN_SERVICELINE, viatic.getServiceline());
+        values.put(viatic.COLUMN_TIMESTAMP, viatic.getTimestamp());
 
         // updating row
         return db.update(viatic.TABLE_NAME, values, viatic.COLUMN_ID + " = ?",

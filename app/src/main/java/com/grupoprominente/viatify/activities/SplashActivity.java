@@ -17,7 +17,6 @@ import com.grupoprominente.viatify.model.ServiceLine;
 import com.grupoprominente.viatify.model.ServiceLines;
 import com.grupoprominente.viatify.model.SubOrganization;
 import com.grupoprominente.viatify.model.SubOrganizations;
-import com.grupoprominente.viatify.sqlite.database.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
