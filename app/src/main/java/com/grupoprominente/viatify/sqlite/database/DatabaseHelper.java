@@ -31,6 +31,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // create notes table
         db.execSQL(Viatic.CREATE_TABLE);
         db.execSQL(Travel.CREATE_TABLE);
+        insertTravels(db);
     }
 
     // Upgrading database
@@ -66,7 +67,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // return newly inserted row id
         return id;
     }
-    public long insertTravel(String title, String description, String path) { //Double amount,
+    public long insertTravel(String title) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -74,8 +75,6 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
         values.put(Travel.COLUMN_TITLE, title);
-        values.put(Travel.COLUMN_DESCRIPTION, description);
-        values.put(Travel.COLUMN_IMGPATH, path);
 
         // insert row
         long id = db.insert(Travel.TABLE_NAME, null, values);
@@ -119,7 +118,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Travel.TABLE_NAME,
-                new String[]{Travel.COLUMN_ID, Travel.COLUMN_TITLE, Travel.COLUMN_DESCRIPTION,  Travel.COLUMN_TIMESTAMP, Travel.COLUMN_IMGPATH}, //Viatic.COLUMN_AMOUNT,
+                new String[]{Travel.COLUMN_ID, Travel.COLUMN_TITLE},
                 Viatic.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -129,10 +128,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         // prepare note object
         Travel travel = new Travel(
                 cursor.getInt(cursor.getColumnIndex(Travel.COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(Travel.COLUMN_TITLE)),
-                cursor.getString(cursor.getColumnIndex(Travel.COLUMN_DESCRIPTION)),
-                cursor.getString(cursor.getColumnIndex(Travel.COLUMN_TIMESTAMP)),
-                cursor.getString(cursor.getColumnIndex(Travel.COLUMN_IMGPATH)));
+                cursor.getString(cursor.getColumnIndex(Travel.COLUMN_TITLE)));
 
         // close the db connection
         cursor.close();
@@ -177,8 +173,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
         List<Travel> travels = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Travel.TABLE_NAME + " ORDER BY " +
-                Travel.COLUMN_TIMESTAMP + " DESC";
+        String selectQuery = "SELECT  * FROM " + Travel.TABLE_NAME;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -189,10 +184,6 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
                 Travel travel = new Travel();
                 travel.setId(cursor.getInt(cursor.getColumnIndex(travel.COLUMN_ID)));
                 travel.setTitle(cursor.getString(cursor.getColumnIndex(travel.COLUMN_TITLE)));
-                travel.setDescription(cursor.getString(cursor.getColumnIndex(travel.COLUMN_DESCRIPTION)));
-                travel.setTimestamp(cursor.getString(cursor.getColumnIndex(travel.COLUMN_TIMESTAMP)));
-                travel.setImgpath(cursor.getString(cursor.getColumnIndex(travel.COLUMN_IMGPATH)));
-
                 travels.add(travel);
             } while (cursor.moveToNext());
         }
@@ -249,8 +240,6 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
 
         ContentValues values = new ContentValues();
         values.put(travel.COLUMN_TITLE, travel.getTitle());
-        values.put(travel.COLUMN_DESCRIPTION, travel.getDescription());
-        values.put(travel.COLUMN_IMGPATH, travel.getImgpath());
 
         // updating row
         return db.update(travel.TABLE_NAME, values, travel.COLUMN_ID + " = ?",
@@ -263,11 +252,31 @@ public class DatabaseHelper  extends SQLiteOpenHelper{
                 new String[]{String.valueOf(viatic.getId())});
         db.close();
     }
+
+    public void deleteViaticById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Viatic.TABLE_NAME, Viatic.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        db.close();
+    }
+
     public void deleteTravel(Travel travel) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(travel.TABLE_NAME, travel.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(travel.getId())});
         db.close();
+    }
+
+    public void insertTravels(SQLiteDatabase db){
+        String[] arrayOrg = {"Viaje 1", "Viaje 2", "Viaje 3", "Viaje 4"};
+        for (String title : arrayOrg) {
+            ContentValues values = new ContentValues();
+
+            values.put(Travel.COLUMN_TITLE, title);
+
+            db.insert(Travel.TABLE_NAME, null, values);
+
+        }
     }
 
 }

@@ -2,7 +2,6 @@ package com.grupoprominente.viatify.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -13,21 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.grupoprominente.viatify.R;
-import com.grupoprominente.viatify.helpers.CircleTransform;
 import com.grupoprominente.viatify.helpers.FlipAnimator;
 import com.grupoprominente.viatify.model.Travel;
 
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHolder> {
     private Context mContext;
     private List<Travel> travels;
-    private MessageAdapterListener listener;
+    private TravelAdapterListener listener;
     private SparseBooleanArray selectedItems;
 
     // array used to perform multiple animation at once
@@ -38,36 +33,26 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
     // dirty fix, find a better solution
     private static int currentSelectedIndex = -1;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        public TextView title, description, amount, iconText, timestamp;
-        public ImageView iconImp, imgProfile;
-        public LinearLayout messageContainer;
+    public class MyViewHolder extends RecyclerView.ViewHolder  {
+        public TextView title, description, iconText;
+        public ImageView imgProfile;
+        public LinearLayout travelContainer;
         public RelativeLayout iconContainer, iconBack, iconFront;
 
         public MyViewHolder(View view) {
             super(view);
-            title = view.findViewById(R.id.v_title);
-            description = view.findViewById(R.id.v_description);
+            title = view.findViewById(R.id.t_title);
             iconText = view.findViewById(R.id.icon_text);
-            timestamp = view.findViewById(R.id.v_timestamp);
             iconBack = view.findViewById(R.id.icon_back);
             iconFront = view.findViewById(R.id.icon_front);
             imgProfile = view.findViewById(R.id.icon_profile);
-            messageContainer = view.findViewById(R.id.viatic_container);
+            travelContainer = view.findViewById(R.id.travel_container);
             iconContainer = view.findViewById(R.id.icon_container);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            listener.onRowLongClicked(getAdapterPosition());
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            return true;
         }
     }
 
 
-    public TravelAdapter(Context mContext, List<Travel> travels, MessageAdapterListener listener) {
+    public TravelAdapter(Context mContext, List<Travel> travels, TravelAdapterListener listener) {
         this.mContext = mContext;
         this.travels = travels;
         this.listener = listener;
@@ -78,7 +63,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_list_row, parent, false);
+                .inflate(R.layout.travel_list_row, parent, false);
 
         return new MyViewHolder(itemView);
     }
@@ -89,9 +74,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
 
         // displaying text view data
         holder.title.setText(travel.getTitle());
-       // holder.amount.setText("$" + viatic.getAmount().toString());
-        holder.description.setText(travel.getDescription());
-        holder.timestamp.setText(travel.getTimestamp());
 
         // displaying the first letter of From in icon text
         holder.iconText.setText(travel.getTitle().substring(0, 1));
@@ -117,38 +99,19 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
             }
         });
 
-        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
+        holder.travelContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onMessageRowClicked(position);
+                listener.onTravelRowClicked(position);
             }
         });
 
-        holder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                listener.onRowLongClicked(position);
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                return true;
-            }
-        });
     }
 
     private void applyProfilePicture(MyViewHolder holder, Travel travel) {
-        if (!TextUtils.isEmpty(travel.getImgpath())) {
-            Glide.with(mContext).load(travel.getImgpath())
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .transform(new CircleTransform(mContext))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.imgProfile);
-            holder.imgProfile.setColorFilter(null);
-            holder.iconText.setVisibility(View.GONE);
-        } else {
-            holder.imgProfile.setImageResource(R.drawable.bg_circle);
-            holder.imgProfile.setColorFilter(travel.getColor());
-            holder.iconText.setVisibility(View.VISIBLE);
-        }
+        holder.imgProfile.setImageResource(R.drawable.bg_circle);
+        holder.imgProfile.setColorFilter(travel.getColor());
+        holder.iconText.setVisibility(View.VISIBLE);
     }
 
     private void applyIconAnimation(MyViewHolder holder, int position) {
@@ -237,11 +200,9 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
         currentSelectedIndex = -1;
     }
 
-    public interface MessageAdapterListener {
+    public interface TravelAdapterListener {
         void onIconClicked(int position);
 
-        void onMessageRowClicked(int position);
-
-        void onRowLongClicked(int position);
+        void onTravelRowClicked(int position);
     }
 }

@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 case R.id.action_send:
                     Intent intent = new Intent(MainActivity.this, TravelActivity.class);
-                    //intent.putExtra(AppConstants.SELECTED_VIATICS, ;
+                    intent.putExtra(AppConstants.SELECTED_VIATICS, getSelectedViaticsIds());
                     startActivity(intent);
                 default:
                     return false;
@@ -226,5 +226,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             mAdapter.removeData(selectedItemPositions.get(i));
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    private int[] getSelectedViaticsIds() {
+        List<Integer> selectedItemPositions =
+                mAdapter.getSelectedItems();
+        int[] seletedIds = new int[selectedItemPositions.size()];
+        for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
+            Viatic viatic = viatics.get(selectedItemPositions.get(i));
+            seletedIds[i] = viatic.getId();
+        }
+        return seletedIds;
     }
 }

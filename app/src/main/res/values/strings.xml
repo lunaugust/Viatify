@@ -14,6 +14,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_settings">Ajustes</string>
     <string name="title_activity_viatic">Viático</string>
+    <string name="title_activity_travel">Viajes</string>
     <string name="prompt_title">Título</string>
     <string name="prompt_description">Descripción</string>
     <string name="prompt_amount">Monto</string>
@@ -22,6 +23,7 @@
     <string name="action_search">Buscar</string>
     <string name="action_delete">Borrar</string>
     <string name="action_send">Asociar a un viaje</string>
+    <string name="action_send_travel">Rendir gastos</string>
     <string name="title_activity_main_nd">MainNDActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

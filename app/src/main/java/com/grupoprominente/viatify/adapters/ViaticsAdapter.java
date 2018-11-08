@@ -79,7 +79,7 @@ public class ViaticsAdapter extends RecyclerView.Adapter<ViaticsAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_list_row, parent, false);
+                .inflate(R.layout.viatic_list_row, parent, false);
 
         return new MyViewHolder(itemView);
     }

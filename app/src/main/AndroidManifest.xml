@@ -46,6 +46,12 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <activity
+            android:name=".activities.TravelActivity"
+            android:label="@string/title_activity_travel"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
