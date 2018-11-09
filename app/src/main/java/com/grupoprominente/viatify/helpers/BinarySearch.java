@@ -2,7 +2,6 @@ package com.grupoprominente.viatify.helpers;
 
 import com.grupoprominente.viatify.model.Organizations;
 import com.grupoprominente.viatify.model.ServiceLine;
-import com.grupoprominente.viatify.model.SubOrganization;
 import com.grupoprominente.viatify.model.SubOrganizations;
 
 import java.util.List;

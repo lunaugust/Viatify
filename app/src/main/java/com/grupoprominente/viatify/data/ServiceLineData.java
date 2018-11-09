@@ -1,9 +1,5 @@
 package com.grupoprominente.viatify.data;
 
-import android.content.ContentValues;
-
-import com.grupoprominente.viatify.model.Organizations;
-import com.grupoprominente.viatify.model.ServiceLine;
 import com.grupoprominente.viatify.model.ServiceLines;
 
 import java.util.ArrayList;

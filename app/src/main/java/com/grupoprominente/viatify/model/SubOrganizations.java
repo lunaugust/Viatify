@@ -1,7 +1,5 @@
 package com.grupoprominente.viatify.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SubOrganizations {
     private int id;

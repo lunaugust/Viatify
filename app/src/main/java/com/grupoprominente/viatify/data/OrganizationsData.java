@@ -1,7 +1,6 @@
 package com.grupoprominente.viatify.data;
 
 import com.grupoprominente.viatify.model.Organizations;
-import com.grupoprominente.viatify.model.ServiceLines;
 
 import java.util.ArrayList;
 import java.util.List;
