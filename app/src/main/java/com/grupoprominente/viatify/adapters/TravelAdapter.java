@@ -33,6 +33,8 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
     // dirty fix, find a better solution
     private static int currentSelectedIndex = -1;
 
+    private boolean selected = false;
+
     public class MyViewHolder extends RecyclerView.ViewHolder  {
         public TextView title, description, iconText;
         public ImageView imgProfile;
@@ -105,7 +107,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
                 listener.onTravelRowClicked(position);
             }
         });
-
     }
 
     private void applyProfilePicture(MyViewHolder holder, Travel travel) {
@@ -165,9 +166,13 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.MyViewHold
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
             animationItemsIndex.delete(pos);
+            selected = false;
         } else {
-            selectedItems.put(pos, true);
-            animationItemsIndex.put(pos, true);
+            if (!selected) {
+                selectedItems.put(pos, true);
+                animationItemsIndex.put(pos, true);
+                selected = true;
+            }
         }
         notifyItemChanged(pos);
     }

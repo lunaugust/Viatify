@@ -99,8 +99,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }
+            if(mAdapter.getSelectedItemCount() > 0){
+                mAdapter.clearSelections();
+                swipeRefreshLayout.setEnabled(true);
+                actionMode.finish();
+                actionMode = null;
 
+            }
+        }
     }
 
     private int getRandomMaterialColor(String typeColor) {

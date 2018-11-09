@@ -138,7 +138,7 @@ public class TravelActivity extends AppCompatActivity implements SwipeRefreshLay
 
         if (count == 0) {
             actionMode.finish();
-        } if (count ==1){
+        } else{
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
